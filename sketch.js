@@ -1,41 +1,48 @@
 
-
+let jackJack;
+ /** This function loads resources that will be used later. */
+ function preload() {
+  
+  //makes jackjack
+  jackJack = new Sprite(100,300);
+  jackJack.addAni('jack jack v3.png');
+  jackJack.scale = 0.2;
+  jackJack.layer = 1;
+  console.log(jackJack.Height)
+  
+}
 
 function setup() {
   createCanvas(1650, 800);
-  jackJack = loadImage('jack jack v3.png');
   
+  noStroke();
+  let floor;
+  floor = new Sprite(825,665,1650,30, 'static');
+  floor.shapeColor = 'green';
+  floor.layer = 0;
+  world.gravity.y=10;
   
 }
 
 
 function drawGround (){
-  //brown ground
+   //brown ground
   fill(117, 71, 39)
-  noStroke();
   rect(0,650,1650,150);
-  //green ground
-  fill(61, 238, 37);
-  rect(0,650,1650,50);
-  
 }
 
 function draw() {
   background(94, 230, 230);
   drawGround();
-  // scale(.3);
   
-  let x = 100
-  let y = 100
-  image(jackJack, x, y);
-  if (kb.pressing('a')) {
-    x+= 5;
-  } /*else if (kb.pressing('d')) {
-    jackJack.vel.x = 5;
+  if (kb.pressing('right')) {
+    jackJack.x+= 5;
+  } else if (kb.pressing('left')) {
+    jackJack.vel.x = -5;
   } else {
     jackJack.vel.x = 0;
   } 
-  */
+  
   
 
 }
