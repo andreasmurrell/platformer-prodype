@@ -53,7 +53,6 @@ function setup() {
   jackJack.collide(trampoline, function() {
 		jackJack.vel.y += 70;
 		
-	});
 }
 
 
