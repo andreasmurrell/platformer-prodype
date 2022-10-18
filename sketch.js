@@ -1,14 +1,16 @@
-defaultFrameRate = 60;
+defaultFrameRate = 120;
+
 //vars for preload
-let jackJack, ladder, secondGround, bridge, thirdGround, trampoline;
+let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5,ground6;
  /** This function loads resources that will be used later. */
  function preload() {
-  
+  //sky
+  sky = loadImage('sky.jpeg')
   //makes jackjack
   jackJack = new Sprite(30,300,265,465);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
-  jackJack.layer = 1;
+  jackJack.layer = 2;
   
   //first ladder
   ladder = new Sprite(150,528,10,505, 'static');
@@ -28,13 +30,38 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline;
   bridge.addAni('bridge.png')
   bridge.scale = 0.7;
   //trampoline
-  trampoline = new Sprite(798,619,60, 'static')
+  trampoline = new Sprite(820,619,400,100, 'static')
   trampoline.addAni('trampoline.png')
   trampoline.scale = 0.3;
+  trampoline.layer = 1;
+  trampoline.bounciness = 1.5;
+  //4th ground
+  ground4 = new Sprite(495,110,480,25,'static')
+  ground4.shapeColor = 'green'
+  
+  //ground5
+  ground5 = new Sprite (360,230,750,25, 'static')
+  ground5.color = 'green';
+  
+  
+  
+  
+      
+  }
+function drawground6(){
+  ground6 = new Sprite(840,230,250,25, 'static')
+  ground6.color = 'green';
+}
+let movingGround;
+function drawMovingGround (){
+  movingGround = new Sprite(1037,231,100,25, 'static')
+  movingGround.color = 'green';
+  
 }
 
 function setup() {
   createCanvas(1650, 800);
+  
   //green ground
   noStroke();
   
@@ -42,18 +69,19 @@ function setup() {
   floor = new Sprite(825,665,1650,30, 'static');
   floor.shapeColor = 'green';
   floor.layer = 0;
+  
   //sets gravity
   world.gravity.y=10;
-  // first latter make up go up
-  jackJack.collide(ladder, function() {
-		jackJack.vel.y += 50;
-		
-	});
   
-  jackJack.collide(trampoline, function() {
-		jackJack.vel.y += 70;
-		
+	
+
+  
 }
+  
+  
+  
+  
+
 
 
 function groundBrown (){
@@ -78,10 +106,17 @@ function jackjackMovment(){
 
 
 function draw() {
-  background(94, 230, 230);
+  //draws sky
+  image(sky,0,0,1650,1000)
   groundBrown();
   jackjackMovment();
-  
-  
-
+   // first latter make up go up
+  if (jackJack.collide(ladder)){
+    jackJack.vel.y += 48;
+  }
+  if (jackJack.collide(ground5)){
+    
+  }
+  drawground6();
+  drawMovingGround();
 }
