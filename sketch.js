@@ -42,21 +42,31 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground
   //ground5
   ground5 = new Sprite (360,230,750,25, 'static')
   ground5.color = 'green';
+
+
+  smallLaddersForQuestions();
   
-  
-  
-  
-      
   }
+let smallLadder1;
+function smallLaddersForQuestions(){
+   // which ladder is the correct hight
+   smallLadder1 = new Sprite(138,772,10,505, 'static');
+   smallLadder1.addAni('ladder.png')
+   smallLadder1.scale = 0.3;
+   smallLadder1.layer = 0;
+   smallLadder1.rotation = 90;
+   text('20/2',141,739);
+}
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
-  ground6.color = 'green';
+  ground6.color = 'blue';
 }
 let movingGround;
 function drawMovingGround (){
-  movingGround = new Sprite(1037,231,100,25, 'static')
-  movingGround.color = 'green';
+  movingGround = new Sprite(1000,230,100,25, 'static')
+  movingGround.color = 'red';
   
+
 }
 
 function setup() {
@@ -72,51 +82,138 @@ function setup() {
   
   //sets gravity
   world.gravity.y=10;
-  
-	
-
-  
+  drawMovingGround();
 }
   
-  
-  
-  
-
-
-
 function groundBrown (){
    //brown ground
   fill(117, 71, 39)
   rect(0,650,1650,150);
 }
 
+function makeBounderys(){
+  //boundery of screen on the right
+  if (jackJack.x > width) {
+    jackJack.x = width - 1;
+    
+  }
+  //boundery on bottom
+  if (jackJack.y > height) {
+    jackJack.y = height - 1;
+    
+  }
+  //boundery top
+  if (jackJack.y < 0) {
+    jackJack.y = 1;
+    
+  }
+  //boundery left
+  if (jackJack.x < 0) {
+    jackJack.x = 1;
+   
+  }
+}
 function jackjackMovment(){
   if (kb.pressing('right')) {
     jackJack.x+= 5;
   } else if (kb.pressing('left')) {
-    jackJack.vel.x = -5;
+    jackJack.x -= 5;
   } else if (kb.pressed('up')) {
     jackJack.vel.y = -5;
   }
-  else {
-    jackJack.vel.x = 0;
-  } 
+  
+}
+
+function ladderHeight (){
+  stroke('black');
+  strokeWeight(3);
+  //vertical line
+  line(195,636,195,418);
+  //top horizontal line
+  line(195,418,180,418)
+  //bottom hoizontal line
+  line(195,636,180,636);
+
+  noStroke();
+  fill('black');
+  textSize(20);
+  text('10ft',210,522);
+}
+
+function questionForLadder(){
+  textSize(25);
+  text('which ladder is the correct hight? Drag the ladder to find out.',130,672);
+  
+  
+  
+  
 }
 
 
-
-function draw() {
-  //draws sky
-  image(sky,0,0,1650,1000)
-  groundBrown();
-  jackjackMovment();
-   // first latter make up go up
-  if (jackJack.collide(ladder)){
-    jackJack.vel.y += 48;
-  }
-  if (jackJack.collide(ground5)){
+const STATIC = 0;
+const LEFT = 1;
+const RIGHT = 2;
+let groundMovingDirection = STATIC;
+let isLadderQuestion = false;
+function animatingMovingGround (){
+  let isGroundMoving = groundMovingDirection != STATIC;
+  // boundery on right side for movingGround
+  if (isGroundMoving && movingGround.x > width-500) {
+    groundMovingDirection = LEFT;
     
   }
-  drawground6();
-  drawMovingGround();
+  //boundery on left side for movingGround
+  if (isGroundMoving && movingGround.x < width-700) {
+    groundMovingDirection = RIGHT;
+    
+  }
+  //make ground5 appear
+  if (jackJack.collide(ground5)){
+    //start ground moving
+    if (groundMovingDirection == STATIC){
+      groundMovingDirection = RIGHT;
+    }
+    drawground6();
+  }
+  //move movingGround tho the right
+  if (groundMovingDirection == RIGHT){
+    movingGround.x+=2;
+    
+  }
+  //move movingGround to the left
+  if (groundMovingDirection == LEFT){
+    movingGround.x-=2;
+    
+  }
 }
+function draw() {
+  
+  //draws sky
+  image(sky,0,0,1650,1000)
+  
+  groundBrown();
+  jackjackMovment();
+   // first ladder make up go up
+  if (jackJack.collide(ladder)){
+    isLadderQuestion = true;
+    jackJack.vel.y -= 10;
+  }
+  if(isLadderQuestion){
+    
+    rect(100,100,100,100)
+  }
+  
+  
+
+
+
+  
+  
+  animatingMovingGround();
+  makeBounderys();
+  ladderHeight();
+  allSprites.draw()
+  questionForLadder();
+}
+  
+
