@@ -49,15 +49,22 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground
 }
 
 
-let smallLadder1;
+let smallLadder1, smallLadder2;
 function smallLaddersForQuestions(){
-   // which ladder is the correct hight
-   smallLadder1 = new Sprite(138,772,70,505);
+   // small ladder to the left that is correct
+   smallLadder1 = new Sprite(138,772,70,505, 'kinematic');
    smallLadder1.addAni('ladder.png')
    smallLadder1.scale = 0.3;
    smallLadder1.layer = 0;
    smallLadder1.rotation = 90;
-   smallLadder1.visible =false   
+   smallLadder1.visible =false
+   //small ladder to the right that is wrong
+   smallLadder2 = new Sprite(400,772,70,505, 'kinematic');
+   smallLadder2.addAni('ladder.png')
+   smallLadder2.scale = 0.3;
+   smallLadder2.layer = 0;
+   smallLadder2.rotation = 90;
+   smallLadder2.visible =false
 }
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
@@ -206,17 +213,17 @@ function draw() {
   if(isLadderQuestion){
     smallLadder1.visible = true
     fill('black')
+    textSize(25);
     text('20/2',142,740);
     questionForLadder();
     ladderHeight();
   }
-    // if (mouse.pressing()){
-    //   rect(100,100,100,100) 
-    // }
-    if (smallLadder1.mouse.pressing()){
-      rect(100,100,100,100);
-      console.log("pressed ladder");
-    }
+    
+  if (smallLadder1.mouse.pressing()){
+     textSize(100);
+    text('YESSSSSS   20/2=10!!', 400,400)
+      
+  }
 
   animatingMovingGround();
   makeBounderys();
