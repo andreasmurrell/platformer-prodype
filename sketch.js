@@ -3,6 +3,7 @@ defaultFrameRate = 120;
 //vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5,ground6;
  /** This function loads resources that will be used later. */
+ 
  function preload() {
   //sky
   sky = loadImage('sky.jpeg')
@@ -43,19 +44,20 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground
   ground5 = new Sprite (360,230,750,25, 'static')
   ground5.color = 'green';
 
-
-  smallLaddersForQuestions();
   
-  }
+  smallLaddersForQuestions(); 
+}
+
+
 let smallLadder1;
 function smallLaddersForQuestions(){
    // which ladder is the correct hight
-   smallLadder1 = new Sprite(138,772,10,505, 'static');
+   smallLadder1 = new Sprite(138,772,70,505);
    smallLadder1.addAni('ladder.png')
    smallLadder1.scale = 0.3;
    smallLadder1.layer = 0;
    smallLadder1.rotation = 90;
-   text('20/2',141,739);
+   smallLadder1.visible =false   
 }
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
@@ -84,18 +86,21 @@ function setup() {
   world.gravity.y=10;
   drawMovingGround();
 }
-  
-function groundBrown (){
+let groundBrownLayer
+function drawGroundBrown (){
    //brown ground
+
   fill(117, 71, 39)
-  rect(0,650,1650,150);
+   groundBrownLayer = rect(0,650,1650,150);
+  groundBrownLayer.layer = 2;
+
 }
 
 function makeBounderys(){
   //boundery of screen on the right
   if (jackJack.x > width) {
     jackJack.x = width - 1;
-    
+    jackJack.vel.x = abs(jackJack.vel.x);
   }
   //boundery on bottom
   if (jackJack.y > height) {
@@ -105,12 +110,12 @@ function makeBounderys(){
   //boundery top
   if (jackJack.y < 0) {
     jackJack.y = 1;
-    
+    jackJack.vel.y = abs(jackJack.vel.y);
   }
   //boundery left
   if (jackJack.x < 0) {
     jackJack.x = 1;
-   
+    jackJack.vel.x = abs(jackJack.vel.x);
   }
 }
 function jackjackMovment(){
@@ -142,11 +147,8 @@ function ladderHeight (){
 
 function questionForLadder(){
   textSize(25);
-  text('which ladder is the correct hight? Drag the ladder to find out.',130,672);
-  
-  
-  
-  
+  text('which ladder is the correct hight? click the small ladder to find out.',70,672);
+
 }
 
 
@@ -154,7 +156,6 @@ const STATIC = 0;
 const LEFT = 1;
 const RIGHT = 2;
 let groundMovingDirection = STATIC;
-let isLadderQuestion = false;
 function animatingMovingGround (){
   let isGroundMoving = groundMovingDirection != STATIC;
   // boundery on right side for movingGround
@@ -186,34 +187,40 @@ function animatingMovingGround (){
     
   }
 }
+let isLadderQuestion = false;
 function draw() {
   
   //draws sky
   image(sky,0,0,1650,1000)
   
-  groundBrown();
+  
   jackjackMovment();
    // first ladder make up go up
   if (jackJack.collide(ladder)){
     isLadderQuestion = true;
-    jackJack.vel.y -= 10;
+    //jackJack.vel.y -= 10;
   }
+  drawGroundBrown();
+  allSprites.draw();
+  //make ladder question appear
   if(isLadderQuestion){
-    
-    rect(100,100,100,100)
+    smallLadder1.visible = true
+    fill('black')
+    text('20/2',142,740);
+    questionForLadder();
+    ladderHeight();
   }
-  
-  
+    // if (mouse.pressing()){
+    //   rect(100,100,100,100) 
+    // }
+    if (smallLadder1.mouse.pressing()){
+      rect(100,100,100,100);
+      console.log("pressed ladder");
+    }
 
-
-
-  
-  
   animatingMovingGround();
   makeBounderys();
-  ladderHeight();
-  allSprites.draw()
-  questionForLadder();
+  
 }
   
 
