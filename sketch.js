@@ -59,14 +59,14 @@ function smallLaddersForQuestions(){
    smallLadder1.scale = 0.3;
    smallLadder1.layer = 0;
    smallLadder1.rotation = 90;
-   //smallLadder1.visible =false
+   smallLadder1.visible =false
    //small ladder to the right that is wrong
    smallLadder2 = new Sprite(360,772,70,505, 'kinematic');
    smallLadder2.addAni('ladder.png')
    smallLadder2.scale = 0.3;
    smallLadder2.layer = 0;
    smallLadder2.rotation = 90;
-   
+   smallLadder2.visible =false
 }
 
 function drawground6(){
@@ -215,6 +215,7 @@ function draw() {
   //make ladder question appear
   if(isLadderQuestion){
     smallLadder1.visible = true
+    smallLadder2.visible = true
     fill('black')
     textSize(25);
     //right small ladder
@@ -232,11 +233,11 @@ function draw() {
     });
     answerIsTrue = true;
   }
-  // left dadder clicking action the wrong chose
+  // left ladder clicking action the wrong chose
   if (smallLadder2.mouse.pressing()){
 
   }
-  
+
   if (answerIsTrue){
     if (jackJack.collide(ladder)){
       jackJack.vel.y -= 10;
