@@ -59,14 +59,14 @@ function smallLaddersForQuestions(){
    smallLadder1.scale = 0.3;
    smallLadder1.layer = 0;
    smallLadder1.rotation = 90;
-   smallLadder1.visible =false
-  //  //small ladder to the right that is wrong
-  //  smallLadder2 = new Sprite(400,772,70,505, 'kinematic');
-  //  smallLadder2.addAni('ladder.png')
-  //  smallLadder2.scale = 0.3;
-  //  smallLadder2.layer = 0;
-  //  smallLadder2.rotation = 90;
-  //  smallLadder2.visible =false
+   //smallLadder1.visible =false
+   //small ladder to the right that is wrong
+   smallLadder2 = new Sprite(360,772,70,505, 'kinematic');
+   smallLadder2.addAni('ladder.png')
+   smallLadder2.scale = 0.3;
+   smallLadder2.layer = 0;
+   smallLadder2.rotation = 90;
+   
 }
 
 function drawground6(){
@@ -217,11 +217,14 @@ function draw() {
     smallLadder1.visible = true
     fill('black')
     textSize(25);
-    text('20/2',142,740);
+    //right small ladder
+    text('20/2',142,750);
+    // left small ladder
+    text('30/2',350,750)
     questionForLadder();
     ladderHeight();
   }
-    
+   //left ladder clicking action 
   if (smallLadder1.mouse.pressing()){
     alert = 'YESSSSSS   20/2=10!!';
     sleep(5000).then(function() {
@@ -229,6 +232,11 @@ function draw() {
     });
     answerIsTrue = true;
   }
+  // left dadder clicking action the wrong chose
+  if (smallLadder2.mouse.pressing()){
+
+  }
+  
   if (answerIsTrue){
     if (jackJack.collide(ladder)){
       jackJack.vel.y -= 10;
