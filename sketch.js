@@ -1,41 +1,44 @@
 defaultFrameRate = 120;
 
 //vars for preload
-let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5,ground6;
- /** This function loads resources that will be used later. */
- 
- function preload() {
-  //sky
+let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6;
+
+/** This function loads resources that will be used later. */ 
+function preload() {
+  // sky
   sky = loadImage('sky.jpeg')
-  //makes jackjack
+  // makes jackjack
   jackJack = new Sprite(30,300,265,465);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
   jackJack.layer = 2;
   
-  //first ladder
+  // first ladder
   ladder = new Sprite(150,528,10,505, 'static');
   ladder.addAni('ladder.png')
   ladder.scale = 0.5;
   ladder.layer = 0;
   
-  //second ground
+  // second ground
   secondGround = new Sprite(280,390,250,25, "static")
   secondGround.shapeColor = 'green';
 
-  //third ground
+  // third ground
   thirdGround = new Sprite(685,378,100,25,'static')
   thirdGround.shapeColor = 'green';
+  
   // bridge
   bridge = new Sprite(525,375,329,5, 'static')
   bridge.addAni('bridge.png')
   bridge.scale = 0.7;
+  
   //trampoline
   trampoline = new Sprite(820,619,400,100, 'static')
   trampoline.addAni('trampoline.png')
   trampoline.scale = 0.3;
   trampoline.layer = 1;
   trampoline.bounciness = 1.5;
+  
   //4th ground
   ground4 = new Sprite(495,110,480,25,'static')
   ground4.shapeColor = 'green'
@@ -44,7 +47,6 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground
   ground5 = new Sprite (360,230,750,25, 'static')
   ground5.color = 'green';
 
-  
   smallLaddersForQuestions(); 
 }
 
@@ -66,16 +68,16 @@ function smallLaddersForQuestions(){
    smallLadder2.rotation = 90;
    smallLadder2.visible =false
 }
+
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
   ground6.color = 'blue';
 }
+
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
   movingGround.color = 'red';
-  
-
 }
 
 function setup() {
@@ -93,38 +95,41 @@ function setup() {
   world.gravity.y=10;
   drawMovingGround();
 }
-let groundBrownLayer
+
+
+let groundBrownLayer;
+
+
 function drawGroundBrown (){
-   //brown ground
-
+  // brown ground
   fill(117, 71, 39)
-   groundBrownLayer = rect(0,650,1650,150);
+  groundBrownLayer = rect(0,650,1650,150);
   groundBrownLayer.layer = 2;
-
 }
 
-function makeBounderys(){
-  //boundery of screen on the right
+function makeBoundaries(){
+  // boundary of screen on the right
   if (jackJack.x > width) {
     jackJack.x = width - 1;
     jackJack.vel.x = abs(jackJack.vel.x);
   }
-  //boundery on bottom
+  // boundary on bottom
   if (jackJack.y > height) {
     jackJack.y = height - 1;
     
   }
-  //boundery top
+  //boundary top
   if (jackJack.y < 0) {
     jackJack.y = 1;
     jackJack.vel.y = abs(jackJack.vel.y);
   }
-  //boundery left
+  //boundary left
   if (jackJack.x < 0) {
     jackJack.x = 1;
     jackJack.vel.x = abs(jackJack.vel.x);
   }
 }
+
 function jackjackMovment(){
   if (kb.pressing('right')) {
     jackJack.x+= 5;
@@ -133,7 +138,6 @@ function jackjackMovment(){
   } else if (kb.pressed('up')) {
     jackJack.vel.y = -5;
   }
-  
 }
 
 function ladderHeight (){
@@ -155,7 +159,6 @@ function ladderHeight (){
 function questionForLadder(){
   textSize(25);
   text('which ladder is the correct hight? click the small ladder to find out.',70,672);
-
 }
 
 
@@ -163,6 +166,7 @@ const STATIC = 0;
 const LEFT = 1;
 const RIGHT = 2;
 let groundMovingDirection = STATIC;
+
 function animatingMovingGround (){
   let isGroundMoving = groundMovingDirection != STATIC;
   // boundery on right side for movingGround
@@ -194,12 +198,11 @@ function animatingMovingGround (){
     
   }
 }
+
 let isLadderQuestion = false;
 function draw() {
-  
   //draws sky
   image(sky,0,0,1650,1000)
-  
   
   jackjackMovment();
    // first ladder make up go up
@@ -220,14 +223,12 @@ function draw() {
   }
     
   if (smallLadder1.mouse.pressing()){
-     textSize(100);
+    textSize(100);
     text('YESSSSSS   20/2=10!!', 400,400)
-      
   }
 
   animatingMovingGround();
-  makeBounderys();
-  
+  makeBoundaries();
 }
   
 
