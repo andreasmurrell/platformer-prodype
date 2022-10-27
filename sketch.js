@@ -1,4 +1,4 @@
-defaultFrameRate = 60;
+defaultFrameRate = 120;
 
 //vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6;
@@ -198,6 +198,7 @@ function animatingMovingGround (){
 let question;
 let isLadderQuestion = false;
 let alert = "";
+let answerIsTrue = false
 function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
@@ -207,7 +208,7 @@ function draw() {
    // first ladder make up go up
   if (jackJack.collide(ladder)){
     isLadderQuestion = true;
-    //jackJack.vel.y -= 10;
+    
   }
   drawGroundBrown();
   allSprites.draw();
@@ -226,8 +227,14 @@ function draw() {
     sleep(5000).then(function() {
       alert = "";
     });
+    answerIsTrue = true;
   }
-
+  if (answerIsTrue){
+    if (jackJack.collide(ladder)){
+      jackJack.vel.y -= 10;
+      
+    }
+  }
   animatingMovingGround();
   makeBoundaries();
 }
