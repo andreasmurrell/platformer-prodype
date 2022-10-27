@@ -1,4 +1,4 @@
-defaultFrameRate = 120;
+defaultFrameRate = 60;
 
 //vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6;
@@ -32,7 +32,7 @@ function preload() {
   bridge.addAni('bridge.png')
   bridge.scale = 0.7;
   
-  //trampoline
+  // trampoline
   trampoline = new Sprite(820,619,400,100, 'static')
   trampoline.addAni('trampoline.png')
   trampoline.scale = 0.3;
@@ -60,13 +60,13 @@ function smallLaddersForQuestions(){
    smallLadder1.layer = 0;
    smallLadder1.rotation = 90;
    smallLadder1.visible =false
-   //small ladder to the right that is wrong
-   smallLadder2 = new Sprite(400,772,70,505, 'kinematic');
-   smallLadder2.addAni('ladder.png')
-   smallLadder2.scale = 0.3;
-   smallLadder2.layer = 0;
-   smallLadder2.rotation = 90;
-   smallLadder2.visible =false
+  //  //small ladder to the right that is wrong
+  //  smallLadder2 = new Sprite(400,772,70,505, 'kinematic');
+  //  smallLadder2.addAni('ladder.png')
+  //  smallLadder2.scale = 0.3;
+  //  smallLadder2.layer = 0;
+  //  smallLadder2.rotation = 90;
+  //  smallLadder2.visible =false
 }
 
 function drawground6(){
@@ -98,8 +98,6 @@ function setup() {
 
 
 let groundBrownLayer;
-
-
 function drawGroundBrown (){
   // brown ground
   fill(117, 71, 39)
@@ -166,7 +164,6 @@ const STATIC = 0;
 const LEFT = 1;
 const RIGHT = 2;
 let groundMovingDirection = STATIC;
-
 function animatingMovingGround (){
   let isGroundMoving = groundMovingDirection != STATIC;
   // boundery on right side for movingGround
@@ -198,12 +195,14 @@ function animatingMovingGround (){
     
   }
 }
-
+let question;
 let isLadderQuestion = false;
+let alert = "";
 function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
-  
+  textSize(100);
+  text(alert);
   jackjackMovment();
    // first ladder make up go up
   if (jackJack.collide(ladder)){
@@ -223,12 +222,18 @@ function draw() {
   }
     
   if (smallLadder1.mouse.pressing()){
-    textSize(100);
-    text('YESSSSSS   20/2=10!!', 400,400)
+    alert = 'YESSSSSS   20/2=10!!';
+    sleep(5000).then(function() {
+      alert = "";
+    });
   }
 
   animatingMovingGround();
   makeBoundaries();
 }
   
-
+async function sleep(ms){
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
