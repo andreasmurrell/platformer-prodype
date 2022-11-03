@@ -1,17 +1,21 @@
+// the frame rate or how often it updates
 defaultFrameRate = 120;
 
 //vars for preload
-let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6;
+let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
+longLadder;
 
 /** This function loads resources that will be used later. */ 
 function preload() {
   // sky
-  sky = loadImage('sky.jpeg')
+  sky = loadImage('sky.jpeg');
+  
   // makes jackjack
   jackJack = new Sprite(30,300,265,465);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
   jackJack.layer = 2;
+  jackJack.rotationLock =  true;
   
   // first ladder
   ladder = new Sprite(150,528,10,505, 'static');
@@ -24,7 +28,7 @@ function preload() {
   secondGround.shapeColor = 'green';
 
   // third ground
-  thirdGround = new Sprite(685,378,100,25,'static')
+  thirdGround = new Sprite(685,383,100,25,'static')
   thirdGround.shapeColor = 'green';
   
   // bridge
@@ -48,6 +52,19 @@ function preload() {
   ground5.color = 'green';
 
   smallLaddersForQuestions(); 
+
+  //ground6 the one after moving ground
+  ground6 = new Sprite(1433,230,200,25,'static');
+  ground6.color = 'green';
+
+  //last ladder to get to the end     //420
+  longLadder = new Sprite(1500,200,10 ,100, 'static');
+  longLadder.addAni('ladder.png');
+  longLadder.scale = 0.5;
+  longLadder
+  //longLadder.h = 10;
+  
+  
 }
 
 
@@ -78,6 +95,8 @@ let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
   movingGround.color = 'red';
+  movingGround.layer = 0
+  
 }
 
 function setup() {
@@ -133,8 +152,11 @@ function jackjackMovment(){
     jackJack.x+= 5;
   } else if (kb.pressing('left')) {
     jackJack.x -= 5;
-  } else if (kb.pressed('up')) {
-    jackJack.vel.y = -5;
+                              //no double jump
+  } else if (kb.pressed('up') && jackJack.vel.y == 0) {
+    jackJack.vel.y -= 5;
+  } else {
+    jackJack.vel.y += 0.01;
   }
 }
 
@@ -167,17 +189,17 @@ let groundMovingDirection = STATIC;
 function animatingMovingGround (){
   let isGroundMoving = groundMovingDirection != STATIC;
   // boundery on right side for movingGround
-  if (isGroundMoving && movingGround.x > width-500) {
+  if (isGroundMoving && movingGround.x > width-350) {
     groundMovingDirection = LEFT;
     
   }
   //boundery on left side for movingGround
-  if (isGroundMoving && movingGround.x < width-700) {
+  if (isGroundMoving && movingGround.x < width-650) {
     groundMovingDirection = RIGHT;
     
   }
   //make ground5 appear
-  if (jackJack.collide(ground5)){
+  if (jackJack.collide(ground4)){
     //start ground moving
     if (groundMovingDirection == STATIC){
       groundMovingDirection = RIGHT;
@@ -195,24 +217,8 @@ function animatingMovingGround (){
     
   }
 }
-let question;
 let isLadderQuestion = false;
-let alert = "";
-let answerIsTrue = false
-function draw() {
-  //draws sky
-  image(sky,0,0,1650,1000)
-  textSize(100);
-  text(alert);
-  jackjackMovment();
-   // first ladder make up go up
-  if (jackJack.collide(ladder)){
-    isLadderQuestion = true;
-    
-  }
-  drawGroundBrown();
-  allSprites.draw();
-  //make ladder question appear
+function drawFirstLadderQuestion (){
   if(isLadderQuestion){
     smallLadder1.visible = true
     smallLadder2.visible = true
@@ -227,29 +233,58 @@ function draw() {
   }
    //left ladder clicking action 
   if (smallLadder1.mouse.pressing()){
-    alert = 'YESSSSSS   20/2=10!!';
-    sleep(5000).then(function() {
-      alert = "";
-    });
+    // alert = 'YESSSSSS   20/2=10!!';
+    // sleep(5000).then(function() {
+    //   alert = "";
+    textSize(45)
+    text('YESSSS 20/2=10!!!!!',600,400)
     answerIsTrue = true;
-  }
-  // left ladder clicking action the wrong chose
+    }//);
+    
+  
+  // right ladder clicking action the wrong chose
   if (smallLadder2.mouse.pressing()){
-
+    textSize(45)
+    text('NO 30/2=15 try again!',600,400)
   }
 
   if (answerIsTrue){
     if (jackJack.collide(ladder)){
-      jackJack.vel.y -= 10;
-      
+      jackJack.vel.y -= 10; 
     }
   }
+}
+
+
+//let alert = "";
+let answerIsTrue = false;
+let ladderQuestionDisappear = false;
+function draw() {
+  //draws sky
+  image(sky,0,0,1650,1000)
+  textSize(100);
+  text(alert);
+  jackjackMovment();
+   // first ladder make up go up
+  if (jackJack.collide(ladder)){
+    isLadderQuestion = true;
+    ladderQuestionDisappear = false;
+    
+  } 
+
+  if (jackJack.colliding(movingGround)) {
+    jackJack.friction = 1000;
+    
+  }
+  drawGroundBrown();
+  allSprites.draw();
+  drawFirstLadderQuestion();
   animatingMovingGround();
   makeBoundaries();
 }
   
-async function sleep(ms){
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+// async function sleep(ms){
+//   return new Promise((resolve) => {
+//     setTimeout(resolve, ms);
+//   });
+//}
