@@ -257,6 +257,16 @@ var makeLadderQuestionDisappear = {
   1: drawFirstLadderQuestion
 }
 var latNum = 0;
+var easterEggOn = false;
+
+function drawText() {
+  // This function will only run when the key "e" is pressed
+  // it will draw the text "Easter Egg" for half a second
+  if(easterEggOn) {
+    textSize(50);
+    text("Easter Egg", 50, 50);
+  }
+}
 
 //let alert = "";
 let answerIsTrue = false;
@@ -287,10 +297,15 @@ function draw() {
   //drawFirstLadderQuestion();
   animatingMovingGround();
   makeBoundaries();
+  if(kb.pressed("e")) {
+    easterEggOn = true;
+    sleep(500).then(() => {easterEggOn = false;})
+  }
+  drawText();
 }
   
-// async function sleep(ms){
-//   return new Promise((resolve) => {
-//     setTimeout(resolve, ms);
-//   });
-//}
+async function sleep(ms){
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
