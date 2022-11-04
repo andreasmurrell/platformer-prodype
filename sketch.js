@@ -58,10 +58,11 @@ function preload() {
   ground6.color = 'green';
 
   //last ladder to get to the end     //420
-  longLadder = new Sprite(1500,200,10 ,100, 'static');
-  longLadder.addAni('ladder.png');
+  longLadder = new Sprite(1530,450,20 ,100, 'static');
+  longLadder.addAni('longLadder.png');
   longLadder.scale = 0.5;
-  longLadder
+  longLadder.layer = 0
+  
   //longLadder.h = 10;
   
   
@@ -167,7 +168,7 @@ function ladderHeight (){
   line(195,636,195,418);
   //top horizontal line
   line(195,418,180,418)
-  //bottom hoizontal line
+  //bottom horizontal line
   line(195,636,180,636);
 
   noStroke();
@@ -176,10 +177,7 @@ function ladderHeight (){
   text('10ft',210,522);
 }
 
-function questionForLadder(){
-  textSize(25);
-  text('which ladder is the correct hight? click the small ladder to find out.',70,672);
-}
+
 
 
 const STATIC = 0;
@@ -227,18 +225,19 @@ function drawFirstLadderQuestion (){
     //right small ladder
     text('20/2',142,750);
     // left small ladder
-    text('30/2',350,750)
-    questionForLadder();
+    text('30/2',350,750)                                                        
+    text('which ladder is the correct hight? click the small ladder to find out.',70,672);
     ladderHeight();
   }
    //left ladder clicking action 
-  if (smallLadder1.mouse.pressing()){
+  if (smallLadder1.mouse.pressed()){
     // alert = 'YESSSSSS   20/2=10!!';
     // sleep(5000).then(function() {
     //   alert = "";
     textSize(45)
     text('YESSSS 20/2=10!!!!!',600,400)
     answerIsTrue = true;
+    jackJack.vel.y -= 10;
     }//);
     
   
@@ -246,39 +245,46 @@ function drawFirstLadderQuestion (){
   if (smallLadder2.mouse.pressing()){
     textSize(45)
     text('NO 30/2=15 try again!',600,400)
+    
   }
 
-  if (answerIsTrue){
-    if (jackJack.collide(ladder)){
-      jackJack.vel.y -= 10; 
-    }
-  }
+  
 }
 
 
+
+var makeLadderQuestionDisappear = {
+  1: drawFirstLadderQuestion
+}
+var latNum = 0;
+
 //let alert = "";
 let answerIsTrue = false;
-let ladderQuestionDisappear = false;
 function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
   textSize(100);
   text(alert);
   jackjackMovment();
-   // first ladder make up go up
-  if (jackJack.collide(ladder)){
-    isLadderQuestion = true;
-    ladderQuestionDisappear = false;
-    
-  } 
-
-  if (jackJack.colliding(movingGround)) {
-    jackJack.friction = 1000;
-    
-  }
   drawGroundBrown();
   allSprites.draw();
-  drawFirstLadderQuestion();
+   // first ladder make up go up
+  if (jackJack.colliding(ladder)){
+    isLadderQuestion = true;
+    latNum = 1;
+    makeLadderQuestionDisappear[latNum]();
+  } else {
+    smallLadder1.visible = false;
+    smallLadder2.visible = false;
+  }
+
+  if (jackJack.colliding(secondGround)) {
+    
+    
+  }
+  
+  
+  //drawFirstLadderQuestion();
   animatingMovingGround();
   makeBoundaries();
 }
