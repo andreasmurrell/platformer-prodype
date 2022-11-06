@@ -61,11 +61,7 @@ function preload() {
   longLadder = new Sprite(1530,450,20 ,100, 'static');
   longLadder.addAni('longLadder.png');
   longLadder.scale = 0.5;
-  longLadder.layer = 0
-  
-  //longLadder.h = 10;
-  
-  
+  longLadder.layer = 0;
 }
 
 
@@ -226,39 +222,64 @@ function drawFirstLadderQuestion (){
     text('20/2',142,750);
     // left small ladder
     text('30/2',350,750)                                                        
-    text('which ladder is the correct hight? click the small ladder to find out.',70,672);
+    text('which ladder is the correct hight? click the smalls ladder to find out.',70,672);
     ladderHeight();
   }
-   //left ladder clicking action 
+
+   //left ladder clicking action the right choose
   if (smallLadder1.mouse.pressed()){
-    // alert = 'YESSSSSS   20/2=10!!';
-    // sleep(5000).then(function() {
-    //   alert = "";
-    textSize(45)
-    text('YESSSS 20/2=10!!!!!',600,400)
     answerIsTrue = true;
     jackJack.vel.y -= 10;
-    }//);
+    isFirstLadderQuestionRightDelayed = true;
+    //makes the text for saying you are right stay up for 3 sec
+    sleep(3000).then(() => {isFirstLadderQuestionRightDelayed = false;})
+    }
     
-  
   // right ladder clicking action the wrong chose
   if (smallLadder2.mouse.pressing()){
-    textSize(45)
-    text('NO 30/2=15 try again!',600,400)
+    isFirstLadderQuestionWrongDelayed = true;
+    sleep(3000).then(() => {isFirstLadderQuestionWrongDelayed = false;})
     
   }
-
-  
 }
 
 
-
+//make the first ladder question disaper when I am not touchin the ladder
 var makeLadderQuestionDisappear = {
   1: drawFirstLadderQuestion
 }
+//when latNum is 1 then it executes drawFirstLadderQuestion
 var latNum = 0;
 
-//let alert = "";
+var easterEggOn = false;
+function drawText() {
+  // This function will only run when the key "e" is pressed
+  // it will draw the text "Easter Egg" for half a second
+  if(easterEggOn) {
+    textSize(50);
+    text("Easter Egg", 50, 50);
+  }
+}
+
+//part of the async function proses
+var isFirstLadderQuestionRightDelayed = false;
+var isFirstLadderQuestionWrongDelayed = false;
+//this will only run when I click on the left small ladder for the first question
+//this is for the first ladder question
+function firstAnswerToQuestionDelay(){
+  //right answer 
+  if (isFirstLadderQuestionRightDelayed) {
+    fill('black')
+    textSize(45)
+    text('YESSSS 20/2=10!!!!!',800,400)
+  } 
+  //wrong answer
+  if (isFirstLadderQuestionWrongDelayed){
+    textSize(45)
+    text('NO 30/2=15 try again!',800,400);
+  }
+}
+
 let answerIsTrue = false;
 function draw() {
   //draws sky
@@ -271,6 +292,7 @@ function draw() {
    // first ladder make up go up
   if (jackJack.colliding(ladder)){
     isLadderQuestion = true;
+    //where it is called when the ladder question diapers
     latNum = 1;
     makeLadderQuestionDisappear[latNum]();
   } else {
@@ -278,19 +300,18 @@ function draw() {
     smallLadder2.visible = false;
   }
 
-  if (jackJack.colliding(secondGround)) {
-    
-    
-  }
   
   
-  //drawFirstLadderQuestion();
+  
+  
   animatingMovingGround();
   makeBoundaries();
+  drawText();
+  firstAnswerToQuestionDelay();
 }
-  
-// async function sleep(ms){
-//   return new Promise((resolve) => {
-//     setTimeout(resolve, ms);
-//   });
-//}
+
+async function sleep(ms){
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
