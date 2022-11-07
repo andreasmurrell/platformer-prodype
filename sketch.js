@@ -3,7 +3,7 @@ defaultFrameRate = 120;
 
 //vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
-longLadder, startingSign, endingSign, verticalGroundBetween5and6;
+longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop;
 
 /** This function loads resources that will be used later. */ 
 function preload() {
@@ -72,9 +72,17 @@ function preload() {
   startingSign.layer = 0
 
   //ending sign
-  endingSign = new Sprite(1603,601)
+  endingSign = new Sprite(1603,601,0.01,0.01, 'static')
   endingSign.addAni('finishSign.png')
   endingSign.scale = 0.3;
+  endingSign.layer = 0;
+
+  //vertical peace in between ground 4 and 5 
+  verticalGroundBetween4and5 = new Sprite(723,169,25,100, 'static')
+  verticalGroundBetween4and5.color = 'green';
+  
+  //vertical peace inbetween ground4 and top of screen so you can't go back
+
 }
 
 
@@ -100,11 +108,9 @@ function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
   ground6.color = 'green';
 }
-function drawVerticalGroundBetween5and6(){
-  //vertical peace in between ground 4 and 5 
-  verticalGroundBetween5and6 = new Sprite(723,169,25,100, 'static')
-  verticalGroundBetween5and6.color = 'green';
-}
+
+
+
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
@@ -216,7 +222,9 @@ function animatingMovingGround (){
       groundMovingDirection = RIGHT;
     }
     drawground6();
-    drawVerticalGroundBetween5and6();
+    //make the ground diaper
+    verticalGroundBetween4and5.remove();
+    
   }
   //move movingGround tho the right
   if (groundMovingDirection == RIGHT){
