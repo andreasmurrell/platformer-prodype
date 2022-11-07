@@ -3,7 +3,7 @@ defaultFrameRate = 120;
 
 //vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
-longLadder;
+longLadder, startingSign, endingSign, verticalGroundBetween5and6;
 
 /** This function loads resources that will be used later. */ 
 function preload() {
@@ -11,7 +11,7 @@ function preload() {
   sky = loadImage('sky.jpeg');
   
   // makes jackjack
-  jackJack = new Sprite(30,300,265,465);
+  jackJack = new Sprite(70,300,265,465);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
   jackJack.layer = 2;
@@ -21,7 +21,7 @@ function preload() {
   ladder = new Sprite(150,528,10,505, 'static');
   ladder.addAni('ladder.png')
   ladder.scale = 0.5;
-  ladder.layer = 0;
+  ladder.layer = 1;
   
   // second ground
   secondGround = new Sprite(280,390,250,25, "static")
@@ -56,12 +56,25 @@ function preload() {
   //ground6 the one after moving ground
   ground6 = new Sprite(1433,230,200,25,'static');
   ground6.color = 'green';
+  
 
-  //last ladder to get to the end     //420
+  
+
+  //last ladder to get to the end     
   longLadder = new Sprite(1530,450,20 ,100, 'static');
   longLadder.addAni('longLadder.png');
   longLadder.scale = 0.5;
   longLadder.layer = 0;
+  
+  //starting sign
+  startingSign = new Sprite (41,615,0.1,0.1,'static');
+  startingSign.addAni('startSignPost.png')
+  startingSign.layer = 0
+
+  //ending sign
+  endingSign = new Sprite(1603,601)
+  endingSign.addAni('finishSign.png')
+  endingSign.scale = 0.3;
 }
 
 
@@ -85,9 +98,13 @@ function smallLaddersForQuestions(){
 
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
-  ground6.color = 'blue';
+  ground6.color = 'green';
 }
-
+function drawVerticalGroundBetween5and6(){
+  //vertical peace in between ground 4 and 5 
+  verticalGroundBetween5and6 = new Sprite(723,169,25,100, 'static')
+  verticalGroundBetween5and6.color = 'green';
+}
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
@@ -199,6 +216,7 @@ function animatingMovingGround (){
       groundMovingDirection = RIGHT;
     }
     drawground6();
+    drawVerticalGroundBetween5and6();
   }
   //move movingGround tho the right
   if (groundMovingDirection == RIGHT){
@@ -212,7 +230,7 @@ function animatingMovingGround (){
   }
 }
 let isLadderQuestion = false;
-function drawFirstLadderQuestion (){
+async function drawFirstLadderQuestion (){
   if(isLadderQuestion){
     smallLadder1.visible = true
     smallLadder2.visible = true
@@ -232,13 +250,17 @@ function drawFirstLadderQuestion (){
     jackJack.vel.y -= 10;
     isFirstLadderQuestionRightDelayed = true;
     //makes the text for saying you are right stay up for 3 sec
-    sleep(3000).then(() => {isFirstLadderQuestionRightDelayed = false;})
+    await sleep(3000);
+    //after time is up this is what make the text turn off
+    isFirstLadderQuestionRightDelayed = false;
     }
     
   // right ladder clicking action the wrong chose
-  if (smallLadder2.mouse.pressing()){
+if (smallLadder2.mouse.pressing()){
     isFirstLadderQuestionWrongDelayed = true;
-    sleep(3000).then(() => {isFirstLadderQuestionWrongDelayed = false;})
+    // await will only work if I make the function async
+    await sleep(3000);
+    isFirstLadderQuestionWrongDelayed = false;
     
   }
 }
@@ -251,16 +273,6 @@ var makeLadderQuestionDisappear = {
 //when latNum is 1 then it executes drawFirstLadderQuestion
 var latNum = 0;
 
-var easterEggOn = false;
-function drawText() {
-  // This function will only run when the key "e" is pressed
-  // it will draw the text "Easter Egg" for half a second
-  if(easterEggOn) {
-    textSize(50);
-    text("Easter Egg", 50, 50);
-  }
-}
-
 //part of the async function proses
 var isFirstLadderQuestionRightDelayed = false;
 var isFirstLadderQuestionWrongDelayed = false;
@@ -272,9 +284,8 @@ function firstAnswerToQuestionDelay(){
     fill('black')
     textSize(45)
     text('YESSSS 20/2=10!!!!!',800,400)
-  } 
-  //wrong answer
-  if (isFirstLadderQuestionWrongDelayed){
+    //wrong answer
+  } else if (isFirstLadderQuestionWrongDelayed){
     textSize(45)
     text('NO 30/2=15 try again!',800,400);
   }
@@ -306,12 +317,12 @@ function draw() {
   
   animatingMovingGround();
   makeBoundaries();
-  drawText();
   firstAnswerToQuestionDelay();
 }
 
 async function sleep(ms){
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+  // return new Promise((resolve) => {
+  //   setTimeout(resolve, ms);
+  // });
+  await setTimeout(function(){},ms)
 }
