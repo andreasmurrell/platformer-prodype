@@ -1,9 +1,10 @@
 // the frame rate or how often it updates
 defaultFrameRate = 120;
 
-//vars for preload
+//sprite vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
-longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop;
+longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop, 
+verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2;
 
 /** This function loads resources that will be used later. */ 
 function preload() {
@@ -11,11 +12,12 @@ function preload() {
   sky = loadImage('sky.jpeg');
   
   // makes jackjack
-  jackJack = new Sprite(70,300,265,465);
+  jackJack = new Sprite(70,300,265,465,);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
   jackJack.layer = 2;
   jackJack.rotationLock =  true;
+  
   
   // first ladder
   ladder = new Sprite(150,528,10,505, 'static');
@@ -57,9 +59,6 @@ function preload() {
   ground6 = new Sprite(1433,230,200,25,'static');
   ground6.color = 'green';
   
-
-  
-
   //last ladder to get to the end     
   longLadder = new Sprite(1530,450,20 ,100, 'static');
   longLadder.addAni('longLadder.png');
@@ -80,12 +79,43 @@ function preload() {
   //vertical peace in between ground 4 and 5 
   verticalGroundBetween4and5 = new Sprite(723,169,25,100, 'static')
   verticalGroundBetween4and5.color = 'green';
-  
-  //vertical peace inbetween ground4 and top of screen so you can't go back
 
+  //vertical ground to the left of moving ground so you can't cheat
+  verticalGroundLeftMovingGround = new Sprite(959,448,25,410, 'static')
+  verticalGroundLeftMovingGround.color = 'green';
+
+  //vertical ground to the right of moving ground
+  verticalGroundRightMovingGround = new Sprite(1317,448,25,410, 'static');
+  verticalGroundRightMovingGround.color = 'green';
+
+  //vertical ground above moving ground so you can't cheat
+  verticalGroundAboveMovingGround = new Sprite(959,120,25,250,'static');
+  verticalGroundAboveMovingGround.color = 'green';
+
+  //coin sprite
+
+  // the 2 small brides for the second math question
+  smallBridge1 = new Sprite(138,762,200,100, 'kinematic');
+  smallBridge1.addAni('bridge.png')
+  smallBridge1.scale = 0.4;
+  smallLadder1.layer = 0;
+  smallBridge1.visible = false;
+
+  smallBridge2 = new Sprite(360,762,200,100, 'kinematic');
+  smallBridge2.addAni('bridge.png')
+  smallBridge2.scale = 0.4;
+  smallLadder2.layer = 0;
+  smallBridge2.visible = false;
+  
 }
 
+function drawVerticalGroundBetween4AndTop(){
+  //vertical peace inbetween ground4 and top of screen so you can't go back
+  verticalGroundBetween4AndTop = new Sprite(722,51,25,100, 'static');
+  verticalGroundBetween4AndTop.color = 'green';
+}
 
+//makes the ladder sprites for the first question
 let smallLadder1, smallLadder2;
 function smallLaddersForQuestions(){
    // small ladder to the left that is correct
@@ -104,13 +134,13 @@ function smallLaddersForQuestions(){
    smallLadder2.visible =false
 }
 
+//the ground that apers above the trampoline
 function drawground6(){
   ground6 = new Sprite(840,230,250,25, 'static')
   ground6.color = 'green';
 }
 
-
-
+//makes the sprite for moving gground
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
@@ -124,7 +154,7 @@ function setup() {
   
   //green ground
   noStroke();
-  
+  //makes the boottom green ground
   let floor;
   floor = new Sprite(825,665,1650,30, 'static');
   floor.shapeColor = 'green';
@@ -136,7 +166,7 @@ function setup() {
 }
 
 
-let groundBrownLayer;
+let groundBrownLayer,sm;
 function drawGroundBrown (){
   // brown ground
   fill(117, 71, 39)
@@ -167,19 +197,25 @@ function makeBoundaries(){
   }
 }
 
+//lets me turn on and off jackjack movement
+var canJackJackMove = true;
 function jackjackMovment(){
-  if (kb.pressing('right')) {
-    jackJack.x+= 5;
-  } else if (kb.pressing('left')) {
-    jackJack.x -= 5;
-                              //no double jump
-  } else if (kb.pressed('up') && jackJack.vel.y == 0) {
-    jackJack.vel.y -= 5;
-  } else {
-    jackJack.vel.y += 0.01;
+  if(canJackJackMove){
+    if (kb.pressing('right')) {
+      jackJack.x+= 5;
+    } else if (kb.pressing('left')) {
+      jackJack.x -= 5;
+                                //no double jump
+    } else if (kb.pressed('up') && jackJack.vel.y == 0) {
+      jackJack.vel.y -= 5;
+    } else {
+      jackJack.vel.y += 0.01;
+    }
   }
+  
 }
 
+//shows the hight of the ladder when jackjack colides with ladder
 function ladderHeight (){
   stroke('black');
   strokeWeight(3);
@@ -195,9 +231,6 @@ function ladderHeight (){
   textSize(20);
   text('10ft',210,522);
 }
-
-
-
 
 const STATIC = 0;
 const LEFT = 1;
@@ -224,7 +257,10 @@ function animatingMovingGround (){
     drawground6();
     //make the ground diaper
     verticalGroundBetween4and5.remove();
-    
+    //makes vertical wall so you can go back out the way you came
+    drawVerticalGroundBetween4AndTop();
+    //makes the ground disappear
+    verticalGroundAboveMovingGround.remove();
   }
   //move movingGround tho the right
   if (groundMovingDirection == RIGHT){
@@ -237,6 +273,8 @@ function animatingMovingGround (){
     
   }
 }
+
+//Draws the first question
 let isLadderQuestion = false;
 async function drawFirstLadderQuestion (){
   if(isLadderQuestion){
@@ -254,7 +292,6 @@ async function drawFirstLadderQuestion (){
 
    //left ladder clicking action the right choose
   if (smallLadder1.mouse.pressed()){
-    answerIsTrue = true;
     jackJack.vel.y -= 10;
     isFirstLadderQuestionRightDelayed = true;
     //makes the text for saying you are right stay up for 3 sec
@@ -273,13 +310,55 @@ if (smallLadder2.mouse.pressing()){
   }
 }
 
+function bridgeMeasurement(){
+  stroke('black');
+  strokeWeight(3);
+  //horesontal line
+  line(414,423,630,423);
+  //vertical line to the left
+  line(414,423,414,405);
+  //vertical line to the right
+  line(630,423,630,400);
+  //shows how long bridge is
+  
+  noStroke();
+  textSize(20);
+  fill('black')
+  text('27ft',520,443);
+}
+var isBridgeQuestion = false;
+async function SecondMathQuestion(){
+  if(isBridgeQuestion){
+    bridgeMeasurement();
+    smallBridge1.visible = true;
+    smallBridge2.visible = true;
+    //the question
+    textSize(24);
+    text('which bridge is the correct length? click one of the small bridges to find out.',10,670)
+    //the left ladder the wrong aswere
+    text('90/6',125,731);
+    //the right ladder the wright aswere
+    text('162/6',342,731)
+  }
+  if (smallBridge1.mouse.pressed()){
+    isFirstBrideQuestionWrongDelayed = true;
+    await sleep(3000);
+    isFirstBrideQuestionWrongDelayed = false;
+  }
+  if(smallBridge2.mouse.pressed()){
+    isFirstBridgeQuestionRightDelayed = true;
+    await sleep(3000);
+    isFirstBridgeQuestionRightDelayed = false;
+  }
+}
 
-//make the first ladder question disaper when I am not touchin the ladder
-var makeLadderQuestionDisappear = {
-  1: drawFirstLadderQuestion
+//make the first ladder question disappear when I am not touching the ladder
+var makeMathQuestionsDisappearWhenNotOn = {
+  1: drawFirstLadderQuestion,
+  2: SecondMathQuestion
 }
 //when latNum is 1 then it executes drawFirstLadderQuestion
-var latNum = 0;
+var makeMathQuestionsDisappearWhenNotOnNum = 0;
 
 //part of the async function proses
 var isFirstLadderQuestionRightDelayed = false;
@@ -299,7 +378,22 @@ function firstAnswerToQuestionDelay(){
   }
 }
 
-let answerIsTrue = false;
+var isFirstBridgeQuestionRightDelayed = false;
+var isFirstBrideQuestionWrongDelayed = false;
+function secondAnswearToQuestionDelay(){
+  if(isFirstBridgeQuestionRightDelayed){
+    textSize(45);
+    fill('black');
+    text('YES! 162/6=27!!!!',800,400);
+    //makes it so that jackjack can move when the question is right
+    canJackJackMove = true;
+  } else if(isFirstBrideQuestionWrongDelayed){
+    fill('black');
+    textSize(45);
+    text('wrong 90/6=15',800,400);
+  }
+}
+
 function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
@@ -308,24 +402,42 @@ function draw() {
   jackjackMovment();
   drawGroundBrown();
   allSprites.draw();
+  
    // first ladder make up go up
   if (jackJack.colliding(ladder)){
     isLadderQuestion = true;
     //where it is called when the ladder question diapers
-    latNum = 1;
-    makeLadderQuestionDisappear[latNum]();
+    makeMathQuestionsDisappearWhenNotOnNum = 1;
+    makeMathQuestionsDisappearWhenNotOn[makeMathQuestionsDisappearWhenNotOnNum]();
+    
   } else {
     smallLadder1.visible = false;
     smallLadder2.visible = false;
   }
+  //makes jackjack move with moving ground
+  if(jackJack.colliding(movingGround)){
+    jackJack.x = movingGround.x;
+  }
 
-  
+  //
+  if(jackJack.colliding(bridge)){
+    //make jackjack not be able to move when touching the bridge
+    canJackJackMove = false;
+
+    isBridgeQuestion = true;
+    makeMathQuestionsDisappearWhenNotOnNum = 2;
+    makeMathQuestionsDisappearWhenNotOn[makeMathQuestionsDisappearWhenNotOnNum]();
+  } else {
+    smallBridge1.visible = false;
+    smallBridge2.visible = false;
+  }
   
   
   
   animatingMovingGround();
   makeBoundaries();
   firstAnswerToQuestionDelay();
+  secondAnswearToQuestionDelay();
 }
 
 async function sleep(ms){
