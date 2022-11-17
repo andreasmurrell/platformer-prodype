@@ -5,7 +5,7 @@ defaultFrameRate = 120;
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
 longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop, 
 verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, startScreen, 
-instructionsScreenSprite, endScreenSprite;
+instructionsScreenSprite, endScreenSprite, deadGroundUnderBridge;
 
 //the var that changes the game screens 
 var mode = 'startScreen';
@@ -28,11 +28,11 @@ function preload() {
   ladder.scale = 0.5;
   ladder.layer = 1;
   
-  // second ground
+  // to the left of the bridge
   secondGround = new Sprite(280,390,250,25, "static")
   secondGround.shapeColor = 'green';
 
-  // third ground
+  // the small one directly to the right of the bridge
   thirdGround = new Sprite(685,383,100,25,'static')
   thirdGround.shapeColor = 'green';
   
@@ -48,11 +48,11 @@ function preload() {
   trampoline.layer = 1;
   trampoline.bounciness = 1.5;
   
-  //4th ground
+  //the highest ground to the left of the trampoline
   ground4 = new Sprite(495,110,480,25,'static')
   ground4.shapeColor = 'green'
   
-  //ground5
+  // the ground right under ground 4
   ground5 = new Sprite (360,230,750,25, 'static')
   ground5.color = 'green';
 
@@ -113,7 +113,8 @@ function preload() {
   smallLadder2.layer = 0;
   smallBridge2.visible = false;
   
-  //instructionsScreenSprite = new Sprite (825,400,1650, 800,'static');
+  deadGroundUnderBridge = new Sprite(450,665,550,30,'static')
+  deadGroundUnderBridge.color = 'red';
 
   
 }
@@ -156,7 +157,7 @@ function drawground6(){
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
-  movingGround.color = 'red';
+  movingGround.color = 'green';
   movingGround.layer = 0
   
 }
@@ -186,7 +187,7 @@ function setup() {
 }
 
 
-let groundBrownLayer,sm;
+let groundBrownLayer;
 function drawGroundBrown (){
   // brown ground
   fill(117, 71, 39)
@@ -373,11 +374,11 @@ async function SecondMathQuestion(){
 }
 
 function deadScreen(){
-  //background('white'); 
-  fill(red);
+  background('white'); 
+  fill('red');
   strokeWeight(20);
-  text('you died',825,400)
-  rect(100,100,100,100)
+  text('you died :)',825,400)
+  
 }
 //make the first ladder question disappear when I am not touching the ladder
 var makeMathQuestionsDisappearWhenNotOn = {
@@ -423,7 +424,7 @@ function secondAnswearToQuestionDelay(){
 
 
 var gameMode = 'instructions';
-function draw() {
+async function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
   drawGroundBrown();
@@ -434,8 +435,14 @@ function draw() {
     
   }
   
-
+    //makes it so that if you donn't make the gap between the top and ground 4
   if(verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)){
+    jackJack.x -= 30
+    
+  }
+
+  if(jackJack.collide(deadGroundUnderBridge)){
+    await sleep(500)
     mode = 'gameEnd'
   }
 
@@ -488,8 +495,5 @@ function draw() {
 }
 
 async function sleep(ms){
-  // return new Promise((resolve) => {
-  //   setTimeout(resolve, ms);
-  // });
   await setTimeout(function(){},ms)
 }
