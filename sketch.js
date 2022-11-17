@@ -4,8 +4,11 @@ defaultFrameRate = 120;
 //sprite vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
 longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop, 
-verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2;
+verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, startScreen, 
+instructionsScreenSprite, endScreenSprite;
 
+//the var that changes the game screens 
+var mode = 'startScreen';
 /** This function loads resources that will be used later. */ 
 function preload() {
   // sky
@@ -93,6 +96,9 @@ function preload() {
   verticalGroundAboveMovingGround.color = 'green';
 
   //coin sprite
+  // coin = new Sprite(190,355,13,'static')
+  // coin.addAni('coin.png');
+  // coin.scale = 1.7
 
   // the 2 small brides for the second math question
   smallBridge1 = new Sprite(138,762,200,100, 'kinematic');
@@ -107,6 +113,9 @@ function preload() {
   smallLadder2.layer = 0;
   smallBridge2.visible = false;
   
+  //instructionsScreenSprite = new Sprite (825,400,1650, 800,'static');
+
+  
 }
 
 function drawVerticalGroundBetween4AndTop(){
@@ -115,6 +124,9 @@ function drawVerticalGroundBetween4AndTop(){
   verticalGroundBetween4AndTop.color = 'green';
 }
 
+function drawInstructionsScreen(){
+ 
+}
 //makes the ladder sprites for the first question
 let smallLadder1, smallLadder2;
 function smallLaddersForQuestions(){
@@ -149,6 +161,13 @@ function drawMovingGround (){
   
 }
 
+function drawArrows(){
+  //strokeWeight(20)
+  line(815,561,815,62);
+
+
+  noStroke();
+}
 function setup() {
   createCanvas(1650, 800);
   
@@ -163,6 +182,7 @@ function setup() {
   //sets gravity
   world.gravity.y=10;
   drawMovingGround();
+  
 }
 
 
@@ -199,7 +219,7 @@ function makeBoundaries(){
 
 //lets me turn on and off jackjack movement
 var canJackJackMove = true;
-function jackjackMovment(){
+function jackjackMovement(){
   if(canJackJackMove){
     if (kb.pressing('right')) {
       jackJack.x+= 5;
@@ -352,6 +372,13 @@ async function SecondMathQuestion(){
   }
 }
 
+function deadScreen(){
+  //background('white'); 
+  fill(red);
+  strokeWeight(20);
+  text('you died',825,400)
+  rect(100,100,100,100)
+}
 //make the first ladder question disappear when I am not touching the ladder
 var makeMathQuestionsDisappearWhenNotOn = {
   1: drawFirstLadderQuestion,
@@ -394,14 +421,32 @@ function secondAnswearToQuestionDelay(){
   }
 }
 
+
+var gameMode = 'instructions';
 function draw() {
   //draws sky
   image(sky,0,0,1650,1000)
-  textSize(100);
-  text(alert);
-  jackjackMovment();
   drawGroundBrown();
   allSprites.draw();
+  if(mode == 'startScreen'){
+    mode = 'instructions';
+  } else if (mode == 'instructions') {
+    
+  }
+  
+
+  if(verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)){
+    mode = 'gameEnd'
+  }
+
+  if (mode == 'gameEnd'){
+    deadScreen();
+    
+   }
+
+  jackjackMovement();
+  
+  
   
    // first ladder make up go up
   if (jackJack.colliding(ladder)){
@@ -419,7 +464,7 @@ function draw() {
     jackJack.x = movingGround.x;
   }
 
-  //
+  //make the bridge question show up
   if(jackJack.colliding(bridge)){
     //make jackjack not be able to move when touching the bridge
     canJackJackMove = false;
@@ -434,10 +479,12 @@ function draw() {
   
   
   
+  
   animatingMovingGround();
   makeBoundaries();
   firstAnswerToQuestionDelay();
   secondAnswearToQuestionDelay();
+  drawArrows();
 }
 
 async function sleep(ms){
