@@ -4,21 +4,24 @@ defaultFrameRate = 120;
 //sprite vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
 longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop, 
-verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, startScreen, 
-instructionsScreenSprite, endScreenSprite, deadGroundUnderBridge;
+verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, STARTSCREEN, 
+instructionsScreenSprite, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround;
 
 //the var that changes the game screens 
 var mode = 'startScreen';
 /** This function loads resources that will be used later. */ 
 function preload() {
+  
   // sky
+  mode = "startScreen";
   sky = loadImage('sky.jpeg');
+  
   
   // makes jackjack
   jackJack = new Sprite(70,300,265,465,);
   jackJack.addAni('jack jack v3.png');
   jackJack.scale = 0.2;
-  jackJack.layer = 2;
+  jackJack.layer = 1;
   jackJack.rotationLock =  true;
   
   
@@ -113,8 +116,12 @@ function preload() {
   smallLadder2.layer = 0;
   smallBridge2.visible = false;
   
+  // the grounds where you can die at 
   deadGroundUnderBridge = new Sprite(450,665,550,30,'static')
   deadGroundUnderBridge.color = 'red';
+
+  deadGroundUnderMovingGround = new Sprite(1139,665,350,30,'static');
+  deadGroundUnderMovingGround.color = 'red';
 
   
 }
@@ -125,8 +132,8 @@ function drawVerticalGroundBetween4AndTop(){
   verticalGroundBetween4AndTop.color = 'green';
 }
 
-function drawInstructionsScreen(){
- 
+function drawStartScreen(){
+  background('white');
 }
 //makes the ladder sprites for the first question
 let smallLadder1, smallLadder2;
@@ -377,7 +384,7 @@ function deadScreen(){
   background('white'); 
   fill('red');
   strokeWeight(20);
-  text('you died :)',825,400)
+  text('you died :) click the restart button',825,400)
   
 }
 //make the first ladder question disappear when I am not touching the ladder
@@ -425,6 +432,8 @@ function secondAnswearToQuestionDelay(){
 
 var gameMode = 'instructions';
 async function draw() {
+  drawStartScreen()
+  
   //draws sky
   image(sky,0,0,1650,1000)
   drawGroundBrown();
@@ -437,13 +446,15 @@ async function draw() {
   
     //makes it so that if you donn't make the gap between the top and ground 4
   if(verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)){
+    //pushes jackjack to the left a bit
     jackJack.x -= 30
-    
   }
 
-  if(jackJack.collide(deadGroundUnderBridge)){
+  if(jackJack.collide(deadGroundUnderMovingGround) || jackJack.collide(deadGroundUnderBridge)){
+    // malkes it so that you don't die instantly when you hit the red ground
     await sleep(500)
-    mode = 'gameEnd'
+    // trigers the end screen
+    mode = 'gameEnd';
   }
 
   if (mode == 'gameEnd'){
@@ -496,4 +507,14 @@ async function draw() {
 
 async function sleep(ms){
   await setTimeout(function(){},ms)
+}
+
+// the button that restarts the game
+function restartButton(){
+  //clears all the sprites 
+ allSprites.remove();
+ //cales these functions again to redraw the sene
+ preload();
+ setup();
+ draw();
 }
