@@ -5,18 +5,21 @@ defaultFrameRate = 120;
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
 longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop, 
 verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, STARTSCREEN, 
-instructionsScreenSprite, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround;
+instructionsScreen, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround, startButton;
 
 //the var that changes the game screens 
 var mode = 'startScreen';
 /** This function loads resources that will be used later. */ 
 function preload() {
-  
+  //makes it s that the dead screen goes away when you restart
+  mode = 'startScreen'
   // sky
-  mode = "startScreen";
   sky = loadImage('sky.jpeg');
   
+  //start Button
   
+  
+
   // makes jackjack
   jackJack = new Sprite(70,300,265,465,);
   jackJack.addAni('jack jack v3.png');
@@ -72,6 +75,11 @@ function preload() {
   longLadder.layer = 0;
   
   //starting sign
+  startingSign = loadImage('startSignPost.png');
+
+  //ending sign
+  endingSign = loadImage('finishSign.png');
+  /*
   startingSign = new Sprite (41,615,0.1,0.1,'static');
   startingSign.addAni('startSignPost.png')
   startingSign.layer = 0
@@ -81,6 +89,7 @@ function preload() {
   endingSign.addAni('finishSign.png')
   endingSign.scale = 0.3;
   endingSign.layer = 0;
+  */
 
   //vertical peace in between ground 4 and 5 
   verticalGroundBetween4and5 = new Sprite(723,169,25,100, 'static')
@@ -123,6 +132,10 @@ function preload() {
   deadGroundUnderMovingGround = new Sprite(1139,665,350,30,'static');
   deadGroundUnderMovingGround.color = 'red';
 
+  //the instruction screen
+  instructionsScreen = loadImage('instructionsScreen.jpg')
+
+
   
 }
 
@@ -133,7 +146,9 @@ function drawVerticalGroundBetween4AndTop(){
 }
 
 function drawStartScreen(){
-  background('white');
+  image(instructionsScreen,0,0,1650,800);
+  startButton = new Sprite(100,100,100,100);
+  startButton.addAni('startButton.png');
 }
 //makes the ladder sprites for the first question
 let smallLadder1, smallLadder2;
@@ -160,7 +175,7 @@ function drawground6(){
   ground6.color = 'green';
 }
 
-//makes the sprite for moving gground
+//makes the sprite for moving ground
 let movingGround;
 function drawMovingGround (){
   movingGround = new Sprite(1000,230,100,25, 'static')
@@ -431,17 +446,18 @@ function secondAnswearToQuestionDelay(){
 
 
 var gameMode = 'instructions';
+
 async function draw() {
-  drawStartScreen()
+  
   
   //draws sky
-  image(sky,0,0,1650,1000)
+  image(sky,0,0,1650,1000);
+  image(startingSign,-43,520,160,160);
+  image(endingSign,1526,520,160,160)
   drawGroundBrown();
   allSprites.draw();
   if(mode == 'startScreen'){
-    mode = 'instructions';
-  } else if (mode == 'instructions') {
-    
+    drawStartScreen();
   }
   
     //makes it so that if you donn't make the gap between the top and ground 4
@@ -459,7 +475,6 @@ async function draw() {
 
   if (mode == 'gameEnd'){
     deadScreen();
-    
    }
 
   jackjackMovement();
@@ -517,4 +532,5 @@ function restartButton(){
  preload();
  setup();
  draw();
+ deadScreen();
 }
