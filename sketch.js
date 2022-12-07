@@ -4,11 +4,11 @@ defaultFrameRate = 120;
 //sprite vars for preload
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
   longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop,
-  verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, STARTSCREEN,
+  verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, 
   instructionsScreen, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround, startButton, rightUpArrow1;
 
 //the var that changes the game screens 
-var mode = 'startScreen';
+var mode = 'startScreen'
 /** This function loads resources that will be used later. */
 function preload() {
   //makes it s that the dead screen goes away when you restart
@@ -21,9 +21,6 @@ function preload() {
   startButton.addAni('startButton.png');
   startButton.scale = 0.17;
   startButton.layer = 3
-
-
-
 
   // makes jackjack
   jackJack = new Sprite(70, 300, 265, 465,);
@@ -145,7 +142,7 @@ function preload() {
   instructionsScreen.layer = 2
 
   rightUpArrow1 = loadImage('rightUpArrow.png');
-
+  
 }
 
 function drawVerticalGroundBetween4AndTop() {
@@ -155,7 +152,7 @@ function drawVerticalGroundBetween4AndTop() {
 }
 
 function drawStartScreen() {
-  var mode = 'instructions'
+  mode = 'instructions'
 
   if (mode == 'instructions') {
     instructionsScreen.visible = true
@@ -163,9 +160,11 @@ function drawStartScreen() {
     if (startButton.mouse.pressed()) {
       instructionsScreen.remove()
       startButton.remove()
+    
     }
+    
   }
-
+  
 
 
 }
@@ -205,6 +204,7 @@ function drawMovingGround() {
 
 }
 
+
 function drawArrows() {
   stroke('black');
   strokeWeight(3);
@@ -212,9 +212,11 @@ function drawArrows() {
   
 
   noStroke();
-
-  image(rightUpArrow1,111,405,50,50)
-
+  if ( mode == 'game'){
+    image(rightUpArrow1,131,390,50,50)
+   }
+ 
+  
   
 }
 function setup() {
@@ -475,24 +477,32 @@ function secondAnswearToQuestionDelay() {
 
 async function draw() {
 
+  if(mode == 'game'){
+    //draws sky
+    image(sky, 0, 0, 1650, 1000);
+    image(startingSign, -43, 520, 160, 160);
+    image(endingSign, 1526, 520, 160, 160)
+    drawGroundBrown();
+    allSprites.draw();
+  }
+  
 
-  //draws sky
-  image(sky, 0, 0, 1650, 1000);
-  image(startingSign, -43, 520, 160, 160);
-  image(endingSign, 1526, 520, 160, 160)
-  drawGroundBrown();
-  allSprites.draw();
+  
+  
 
-  if (mode == 'startScreen') {
+  
+    drawArrows();
     drawStartScreen();
     
-  }
-
-  if (mode == 'game') {
-    preload();
-    setup();
-    draw();
-  }
+    
+  
+ 
+  
+  // if (mode == 'game') {
+  //   preload();
+  //   setup();
+  //   draw();
+  // }
 
   //makes it so that if you donn't make the gap between the top and ground 4
   if (verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)) {
@@ -505,6 +515,7 @@ async function draw() {
     await sleep(500)
     // trigers the end screen
     mode = 'gameEnd';
+    
   }
 
   if (mode == 'gameEnd') {
@@ -551,7 +562,7 @@ async function draw() {
   makeBoundaries();
   firstAnswerToQuestionDelay();
   secondAnswearToQuestionDelay();
-  drawArrows();
+  
 }
 
 async function sleep(ms) {
@@ -560,7 +571,7 @@ async function sleep(ms) {
 
 // the button that restarts the game
 function restartButton() {
-  
+ //mode = 'startScreen'
   //clears all the sprites 
   allSprites.remove();
   //cales these functions again to redraw the sene
@@ -568,4 +579,7 @@ function restartButton() {
   setup();
   draw();
   deadScreen();
+  
+  
 }
+
