@@ -8,11 +8,10 @@ let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground
   instructionsScreen, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround, startButton, rightUpArrow1;
 
 //the var that changes the game screens 
-var mode = 'startScreen'
+
 /** This function loads resources that will be used later. */
 function preload() {
-  //makes it s that the dead screen goes away when you restart
-  mode = 'startScreen'
+  
   // sky
   sky = loadImage('sky.jpeg');
 
@@ -152,21 +151,15 @@ function drawVerticalGroundBetween4AndTop() {
 }
 
 function drawStartScreen() {
-  mode = 'instructions'
 
-  if (mode == 'instructions') {
+  
     instructionsScreen.visible = true
     //makes the buttton and instrections disapear
     if (startButton.mouse.pressed()) {
       instructionsScreen.remove()
       startButton.remove()
-    
+      mode = 'game'
     }
-    
-  }
-  
-
-
 }
 
 
@@ -474,59 +467,27 @@ function secondAnswearToQuestionDelay() {
 
 
 
-
+var mode = 'instructions'
 async function draw() {
 
-  if(mode == 'game'){
+  if(mode == 'instructions'){
+    drawStartScreen();
+  } else if (mode == 'game'){
     //draws sky
     image(sky, 0, 0, 1650, 1000);
     image(startingSign, -43, 520, 160, 160);
     image(endingSign, 1526, 520, 160, 160)
     drawGroundBrown();
     allSprites.draw();
-  }
-  
-
-  
-  
-
-  
     drawArrows();
-    drawStartScreen();
-    
-    
-  
- 
-  
-  // if (mode == 'game') {
-  //   preload();
-  //   setup();
-  //   draw();
-  // }
 
-  //makes it so that if you donn't make the gap between the top and ground 4
-  if (verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)) {
-    //pushes jackjack to the left a bit
-    jackJack.x -= 30
-  }
+    //makes it so that if you donn't make the gap between the top and ground 4
+    if (verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)) {
+      //pushes jackjack to the left a bit
+      jackJack.x -= 30
+    }
 
-  if (jackJack.collide(deadGroundUnderMovingGround) || jackJack.collide(deadGroundUnderBridge)) {
-    // malkes it so that you don't die instantly when you hit the red ground
-    await sleep(500)
-    // trigers the end screen
-    mode = 'gameEnd';
-    
-  }
-
-  if (mode == 'gameEnd') {
-    deadScreen();
-  }
-
-  jackjackMovement();
-
-
-
-  // first ladder make up go up
+    // first ladder make up go up
   if (jackJack.colliding(ladder)) {
     isLadderQuestion = true;
     //where it is called when the ladder question diapers
@@ -555,14 +516,26 @@ async function draw() {
     smallBridge2.visible = false;
   }
 
-
+  if (jackJack.collide(deadGroundUnderMovingGround) || jackJack.collide(deadGroundUnderBridge)) {
+    // malkes it so that you don't die instantly when you hit the red ground
+    await sleep(500)
+    // trigers the end screen
+    mode = 'gameEnd';
+    
+  }
 
 
   animatingMovingGround();
   makeBoundaries();
   firstAnswerToQuestionDelay();
   secondAnswearToQuestionDelay();
-  
+  }
+  if (mode == 'gameEnd') {
+    deadScreen();
+    //mode = 'instructions'
+  }
+
+  jackjackMovement();
 }
 
 async function sleep(ms) {
@@ -571,14 +544,14 @@ async function sleep(ms) {
 
 // the button that restarts the game
 function restartButton() {
- //mode = 'startScreen'
+  mode = 'instructions'
   //clears all the sprites 
   allSprites.remove();
-  //cales these functions again to redraw the sene
+  //calles these functions again to redraw the sene
   preload();
   setup();
   draw();
-  deadScreen();
+  //deadScreen();
   
   
 }
