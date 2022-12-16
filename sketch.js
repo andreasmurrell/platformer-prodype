@@ -5,7 +5,8 @@ defaultFrameRate = 120;
 let jackJack, ladder, secondGround, bridge, thirdGround, trampoline, sky, ground4, slide, ground5, ground6,
   longLadder, startingSign, endingSign, verticalGroundBetween4and5, verticalGroundBetween4AndTop,
   verticalGroundRightMovingGround, verticalGroundAboveMovingGround, coin, smallBridge1, smallBridge2, 
-  instructionsScreen, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround, startButton, rightUpArrow1;
+  instructionsScreen, endScreenSprite, deadGroundUnderBridge, deadGroundUnderMovingGround, startButton, rightUpArrow1,
+  rightDownArrow;
 
 //the var that changes the game screens 
 
@@ -18,21 +19,24 @@ function preload() {
   //start Button
   startButton = new Sprite(820, 500, 300, 300, 'kinematic');
   startButton.addAni('startButton.png');
-  startButton.scale = 0.17;
+  startButton.ani.scale.x = 0.17;
+  startButton.ani.scale.y = 0.17;
   startButton.layer = 3
 
   // makes jackjack
-  jackJack = new Sprite(70, 300, 265, 465,);
+  jackJack = new Sprite(70, 300, 20, 80);
   jackJack.addAni('jack jack v3.png');
-  jackJack.scale = 0.2;
+  jackJack.ani.scale.x = 0.2;
+  jackJack.ani.scale.y = 0.2;
   jackJack.layer = 1;
   jackJack.rotationLock = true;
 
 
   // first ladder
-  ladder = new Sprite(150, 528, 10, 505, 'static');
+  ladder = new Sprite(150, 528, 10, 300, 'static');
   ladder.addAni('ladder.png')
-  ladder.scale = 0.5;
+  ladder.ani.scale.x = 0.5;
+  ladder.ani.scale.y = 0.5;
   ladder.layer = 1;
 
   // to the left of the bridge
@@ -46,17 +50,19 @@ function preload() {
   thirdGround.layer = 0
 
   // bridge
-  bridge = new Sprite(525, 375, 329, 5, 'static')
+  bridge = new Sprite(525, 375, 260, 5, 'static')
   bridge.addAni('bridge.png')
-  bridge.scale = 0.7;
+  bridge.ani.scale.x = 0.7;
+  bridge.ani.scale.y = 0.7;
   bridge.layer = 1;
 
   // trampoline
-  trampoline = new Sprite(820, 619, 400, 100, 'static')
+  trampoline = new Sprite(820, 619, 160, 100, 'static')
   trampoline.addAni('trampoline.png')
-  trampoline.scale = 0.3;
+  trampoline.ani.scale.x = 0.3;
+  trampoline.ani.scale.y = 0.3;
   trampoline.layer = 1;
-  trampoline.bounciness = 1.5;
+  trampoline.bounciness = 1.7;
 
   //the highest ground to the left of the trampoline
   ground4 = new Sprite(495, 110, 480, 25, 'static')
@@ -76,9 +82,10 @@ function preload() {
   ground6.layer = 0;
 
   //last ladder to get to the end     
-  longLadder = new Sprite(1530, 450, 20, 100, 'static');
+  longLadder = new Sprite(1530, 450, 20, 400, 'static');
   longLadder.addAni('longLadder.png');
-  longLadder.scale = 0.5;
+  longLadder.ani.scale.x = 0.5;
+  longLadder.ani.scale.y = 0.5;
   longLadder.layer = 0;
 
   //starting sign
@@ -115,13 +122,15 @@ function preload() {
   // the 2 small brides for the second math question
   smallBridge1 = new Sprite(138, 762, 200, 100, 'kinematic');
   smallBridge1.addAni('bridge.png')
-  smallBridge1.scale = 0.4;
+  smallBridge1.ani.scale.x = 0.4;
+  smallBridge1.ani.scale.y = 0.4;
   smallLadder1.layer = 0;
   smallBridge1.visible = false;
 
   smallBridge2 = new Sprite(360, 762, 200, 100, 'kinematic');
   smallBridge2.addAni('bridge.png')
-  smallBridge2.scale = 0.4;
+  smallBridge2.ani.scale.x = 0.4;
+  smallBridge2.ani.scale.y = 0.4;
   smallLadder2.layer = 0;
   smallBridge2.visible = false;
 
@@ -140,7 +149,11 @@ function preload() {
   instructionsScreen.visible = false
   instructionsScreen.layer = 2
 
+  //first one telling you to go right after the ladder
   rightUpArrow1 = loadImage('rightUpArrow.png');
+  //the one telling you to go down from the tramp
+  rightDownArrow = loadImage('rightDownArrow.png');
+  rightDownArrow.ani.scale.x = 0.5
   
 }
 
@@ -167,16 +180,18 @@ function drawStartScreen() {
 let smallLadder1, smallLadder2;
 function smallLaddersForQuestions() {
   // small ladder to the left that is correct
-  smallLadder1 = new Sprite(138, 772, 70, 505, 'kinematic');
+  smallLadder1 = new Sprite(138, 772, 40, 100, 'kinematic');
   smallLadder1.addAni('ladder.png')
-  smallLadder1.scale = 0.3;
+  smallLadder1.ani.scale.x = 0.3;
+  smallLadder1.ani.scale.y = 0.3;
   smallLadder1.layer = 0;
   smallLadder1.rotation = 90;
   smallLadder1.visible = false
   //small ladder to the right that is wrong
-  smallLadder2 = new Sprite(360, 772, 70, 505, 'kinematic');
+  smallLadder2 = new Sprite(360, 772, 40, 100, 'kinematic');
   smallLadder2.addAni('ladder.png')
-  smallLadder2.scale = 0.3;
+  smallLadder2.ani.scale.x = 0.3;
+  smallLadder2.ani.scale.y = 0.3;
   smallLadder2.layer = 0;
   smallLadder2.rotation = 90;
   smallLadder2.visible = false
@@ -185,7 +200,8 @@ function smallLaddersForQuestions() {
 //the ground that apers above the trampoline
 function drawground6() {
   ground6 = new Sprite(840, 230, 250, 25, 'static')
-  ground6.color = 'green';
+  ground6.color = 'red';
+  ground6.layer = 0;
 }
 
 //makes the sprite for moving ground
@@ -206,7 +222,11 @@ function drawArrows() {
 
   noStroke();
   if ( mode == 'game'){
-    image(rightUpArrow1,131,390,50,50)
+    //first one telling you to go right after the ladder
+    image(rightUpArrow1,85,360,50,60)
+    //the one telling you to go down from the tramp
+    image(rightDownArrow,749,345,)
+
    }
  
   
@@ -267,6 +287,7 @@ function jackjackMovement() {
   if (canJackJackMove) {
     if (kb.pressing('right')) {
       jackJack.x += 5;
+      //jackJack.move(10,'right',5)
     } else if (kb.pressing('left')) {
       jackJack.x -= 5;
       //no double jump
@@ -362,7 +383,7 @@ async function drawFirstLadderQuestion() {
     await sleep(3000);
     //after time is up this is what make the text turn off
     isFirstLadderQuestionRightDelayed = false;
-  }
+  } 
 
   // right ladder clicking action the wrong chose
   if (smallLadder2.mouse.pressing()) {
@@ -479,7 +500,7 @@ async function draw() {
     image(endingSign, 1526, 520, 160, 160)
     drawGroundBrown();
     allSprites.draw();
-    drawArrows();
+    //drawArrows();
 
     //makes it so that if you donn't make the gap between the top and ground 4
     if (verticalGroundBetween4AndTop && jackJack.collide(verticalGroundBetween4AndTop)) {
@@ -534,7 +555,7 @@ async function draw() {
     deadScreen();
     //mode = 'instructions'
   }
-
+ 
   jackjackMovement();
 }
 
@@ -544,7 +565,7 @@ async function sleep(ms) {
 
 // the button that restarts the game
 function restartButton() {
-  mode = 'instructions'
+  
   //clears all the sprites 
   allSprites.remove();
   //calles these functions again to redraw the sene
@@ -552,7 +573,7 @@ function restartButton() {
   setup();
   draw();
   //deadScreen();
-  
+  mode = 'instructions'
   
 }
 
